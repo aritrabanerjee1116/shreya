@@ -330,9 +330,6 @@ const ScratchReveal = () => {
   }, []);
 
   const doScratch = (clientX: number, clientY: number) => {
-    if (latestPctRef.current > 75) {
-      tryPlayVideo();
-    }
     const canvas = canvasRef.current;
     if (!canvas || revealedRef.current || !isDrawing.current) return;
     const ctx = canvas.getContext('2d')!;
