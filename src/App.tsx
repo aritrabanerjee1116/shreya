@@ -288,6 +288,17 @@ const ScratchReveal = () => {
   const msgIdxRef = useRef(0);
   const lastMsgTime = useRef(0);
   const revealedRef = useRef(false);
+  const hasStartedPlaying = useRef(false);
+
+  const tryPlayVideo = () => {
+    if (!hasStartedPlaying.current) {
+      hasStartedPlaying.current = true;
+      const iframe = document.getElementById('scratch-youtube') as HTMLIFrameElement;
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
+      }
+    }
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -352,10 +363,11 @@ const ScratchReveal = () => {
         const total = data.data.length / 4 / 4;
         const pct = Math.min(100, Math.round((transparent / total) * 100));
         setScratchProgress(pct);
-        if (pct > 55) {
+        if (pct > 75) {
           revealedRef.current = true;
           setRevealed(true);
           setTeasingMsg('');
+          tryPlayVideo();
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         rafPending.current = false;
@@ -394,30 +406,26 @@ const ScratchReveal = () => {
         </div>
 
         <div className="scratch-wrapper reveal">
+          {!revealed && (
+            <div className="scratch-behind-hint">
+              <div className="scratch-lily-bg" aria-hidden="true">🌸</div>
+              <p>Your surprise is hiding here...</p>
+            </div>
+          )}
           <div className={`scratch-video-container ${revealed ? 'video-visible' : ''}`}>
-            {revealed && (
-              <>
-                <div className="video-reveal-text">
-                  <span className="video-reveal-title">🌸 I Found YOU, Shreya 🌸</span>
-                  <span className="video-reveal-sub">— Aritra 💛</span>
-                </div>
-                <div className="youtube-embed-wrapper">
-                  <iframe
-                    id="scratch-youtube"
-                    src="https://www.youtube.com/embed/COna6qKOCug?autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
-                    title="I Found You - Shreya"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </>
-            )}
-            {!revealed && (
-              <div className="scratch-behind-hint">
-                <div className="scratch-lily-bg" aria-hidden="true">🌸</div>
-                <p>Your surprise is hiding here...</p>
-              </div>
-            )}
+            <div className="video-reveal-text">
+              <span className="video-reveal-title">🌸 I Found YOU, Shreya 🌸</span>
+              <span className="video-reveal-sub">— Aritra 💛</span>
+            </div>
+            <div className="youtube-embed-wrapper">
+              <iframe
+                id="scratch-youtube"
+                src="https://www.youtube.com/embed/COna6qKOCug?enablejsapi=1&autoplay=0&controls=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
+                title="I Found You - Shreya"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           </div>
 
           {!revealed && (
@@ -671,8 +679,9 @@ export default function App() {
 
       {/* ── NAV ── */}
       <nav className="nav">
-        <div className="nav-logo">🌸 Shreya</div>
-        <ul className="nav-links" style={{ display: navOpen ? 'flex' : undefined }}>
+        
+        <div className={`nav-overlay ${navOpen ? 'open' : ''}`} onClick={() => setNavOpen(false)} />
+        <ul className={`nav-links ${navOpen ? 'nav-open' : ''}`}>
           {['#hero', '#scratch', '#countdown', '#gallery', '#love-letter', '#worth'].map(href => (
             <li key={href}>
               <a href={href} onClick={() => setNavOpen(false)}>

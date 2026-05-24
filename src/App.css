@@ -60,9 +60,45 @@
   cursor: pointer;
 }
 @media (max-width: 768px) {
-  .nav-links { display: none; }
-  .nav-mobile-toggle { display: block; }
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100vh;
+    background: #1a0533;
+    flex-direction: column;
+    padding-top: 5rem;
+    gap: 2rem;
+    transform: translateX(100%);
+    transition: transform 0.35s ease-in-out;
+    box-shadow: -5px 0 30px rgba(0,0,0,0.5);
+    z-index: 999;
+  }
+  .nav-links.nav-open {
+    transform: translateX(0);
+  }
+  .nav-mobile-toggle { display: block; z-index: 1000; }
   .nav { padding: 1rem 1.5rem; }
+  
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 998;
+  }
+  .nav-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .scratch-wrapper {
+    width: 90%;
+    margin: 0 auto;
+  }
 }
 
 /* ─── HERO ─────────────────────────────────────── */
@@ -144,6 +180,9 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+li{
+  padding-left: 15px;
 }
 .hero-subtitle-name {
   font-family: 'Dancing Script', cursive;
@@ -1035,14 +1074,12 @@
   overflow: hidden;
   box-shadow: 0 0 60px rgba(245,200,66,0.15), 0 0 120px rgba(255,107,138,0.08);
   border: 2px solid rgba(245,200,66,0.25);
-  aspect-ratio: 16/9;
   background: linear-gradient(135deg, #1a0533, #2d0952, #0a0118);
-  min-height: 280px;
+  width: 100%;
 }
 
 .scratch-video-container {
-  position: absolute;
-  inset: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1052,6 +1089,8 @@
   opacity: 0;
   transition: opacity 0.8s ease;
   background: linear-gradient(135deg, #0a0118 0%, #1a0533 100%);
+  width: 100%;
+  z-index: 2;
 }
 .scratch-video-container.video-visible {
   opacity: 1;
@@ -1079,7 +1118,8 @@
 
 .youtube-embed-wrapper {
   width: 100%;
-  flex: 1;
+  aspect-ratio: 16/9;
+  flex: none;
   border-radius: 16px;
   overflow: hidden;
   animation: fadeInUp 1s ease 0.3s both;
@@ -1087,17 +1127,21 @@
 .youtube-embed-wrapper iframe {
   width: 100%;
   height: 100%;
-  min-height: 170px;
   border: none;
   border-radius: 16px;
+  min-height: 0;
 }
 
 .scratch-behind-hint {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   color: rgba(255,255,255,0.25);
+  z-index: 1;
   font-family: 'Dancing Script', cursive;
   font-size: 1.2rem;
 }
@@ -1115,7 +1159,7 @@
   touch-action: none;
   cursor: crosshair;
   border-radius: 28px;
-  z-index: 2;
+  z-index: 10;
 }
 
 .scratch-progress-bar {
@@ -1125,7 +1169,7 @@
   right: 0;
   height: 5px;
   background: rgba(255,255,255,0.08);
-  z-index: 3;
+  z-index: 11;
 }
 .scratch-progress-fill {
   height: 100%;
