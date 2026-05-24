@@ -288,6 +288,7 @@ const ScratchReveal = () => {
   const msgIdxRef = useRef(0);
   const lastMsgTime = useRef(0);
   const revealedRef = useRef(false);
+  const latestPctRef = useRef(0);
   const hasStartedPlaying = useRef(false);
 
   const tryPlayVideo = () => {
@@ -329,6 +330,9 @@ const ScratchReveal = () => {
   }, []);
 
   const doScratch = (clientX: number, clientY: number) => {
+    if (latestPctRef.current > 75) {
+      tryPlayVideo();
+    }
     const canvas = canvasRef.current;
     if (!canvas || revealedRef.current || !isDrawing.current) return;
     const ctx = canvas.getContext('2d')!;
@@ -363,11 +367,11 @@ const ScratchReveal = () => {
         const total = data.data.length / 4 / 4;
         const pct = Math.min(100, Math.round((transparent / total) * 100));
         setScratchProgress(pct);
-        if (pct > 75) {
+        latestPctRef.current = pct;
+        if (pct > 75 && !revealedRef.current) {
           revealedRef.current = true;
           setRevealed(true);
           setTeasingMsg('');
-          tryPlayVideo();
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         rafPending.current = false;
@@ -376,14 +380,19 @@ const ScratchReveal = () => {
   };
 
   const onMouseDown = (e: React.MouseEvent) => {
+    if (revealedRef.current && latestPctRef.current > 75) tryPlayVideo();
     if (revealedRef.current) return;
     isDrawing.current = true;
     doScratch(e.clientX, e.clientY);
   };
   const onMouseMove = (e: React.MouseEvent) => doScratch(e.clientX, e.clientY);
-  const onMouseUp = () => { isDrawing.current = false; };
+  const onMouseUp = () => { 
+    if (latestPctRef.current > 75) tryPlayVideo();
+    isDrawing.current = false; 
+  };
 
   const onTouchStart = (e: React.TouchEvent) => {
+    if (revealedRef.current && latestPctRef.current > 75) tryPlayVideo();
     if (revealedRef.current) return;
     isDrawing.current = true;
     doScratch(e.touches[0].clientX, e.touches[0].clientY);
@@ -392,7 +401,10 @@ const ScratchReveal = () => {
     if (e.cancelable) e.preventDefault(); // Prevent scrolling while scratching
     doScratch(e.touches[0].clientX, e.touches[0].clientY);
   };
-  const onTouchEnd = () => { isDrawing.current = false; };
+  const onTouchEnd = () => { 
+    if (latestPctRef.current > 75) tryPlayVideo();
+    isDrawing.current = false; 
+  };
 
   return (
     <section className="section scratch-section" id="scratch">
