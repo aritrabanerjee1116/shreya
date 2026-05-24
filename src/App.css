@@ -7,11 +7,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(26,5,51,0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(18,3,36,0.96);
   border-bottom: 1px solid rgba(245,200,66,0.15);
-  animation: slideInFromTop 1s ease forwards;
+  animation: slideInFromTop 0.6s ease forwards;
+  will-change: transform;
+  contain: layout style;
 }
 .nav-logo {
   font-family: 'Dancing Script', cursive;
@@ -21,7 +21,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: letter-glow 3s ease infinite;
 }
 .nav-links {
   display: flex;
@@ -50,7 +49,6 @@
 .nav-links a:hover::after { transform: scaleX(1); }
 .nav-heart {
   font-size: 1.4rem;
-  animation: heartbeat 2s ease infinite;
   cursor: pointer;
 }
 .nav-mobile-toggle {
@@ -146,8 +144,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  background-size: 200% 200%;
-  animation: gradient-shift 5s ease infinite;
 }
 .hero-subtitle-name {
   font-family: 'Dancing Script', cursive;
@@ -158,7 +154,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: letter-glow 2s ease infinite;
   margin-bottom: 1rem;
 }
 .hero-tagline {
@@ -200,10 +195,11 @@
   position: absolute;
   border-radius: 50%;
   border: 2px solid rgba(245,200,66,0.3);
+  will-change: transform;
   animation: spin-slow linear infinite;
 }
-.hero-photo-ring-1 { width: 380px; height: 380px; animation-duration: 20s; }
-.hero-photo-ring-2 { width: 320px; height: 320px; animation-duration: 15s; animation-direction: reverse; border-color: rgba(255,107,138,0.3); }
+.hero-photo-ring-1 { width: 380px; height: 380px; animation-duration: 30s; }
+.hero-photo-ring-2 { width: 320px; height: 320px; animation-duration: 25s; animation-direction: reverse; border-color: rgba(255,107,138,0.25); }
 .hero-photo {
   width: 280px;
   height: 380px;
@@ -213,7 +209,7 @@
   border: 4px solid var(--gold);
   position: relative;
   z-index: 1;
-  animation: pulse-glow 3s ease infinite;
+  box-shadow: var(--glow-gold);
   filter: brightness(1.05) saturate(1.1);
 }
 .hero-floating-emojis {
@@ -224,7 +220,7 @@
 .hero-emoji {
   position: absolute;
   font-size: 2rem;
-  animation: float linear infinite;
+  animation: float 6s ease-in-out infinite;
 }
 
 @media (max-width: 900px) {
@@ -305,7 +301,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: counter-pulse 1s ease infinite;
   display: block;
   line-height: 1;
 }
@@ -323,14 +318,12 @@
   font-family: 'Dancing Script', cursive;
   font-size: clamp(1.3rem, 3vw, 2rem);
   color: var(--pink-soft);
-  animation: float 4s ease infinite;
 }
 .birthday-passed {
   text-align: center;
   font-family: 'Dancing Script', cursive;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   color: var(--gold);
-  animation: letter-glow 2s ease infinite;
 }
 
 @media (max-width: 480px) {
@@ -360,7 +353,6 @@
   filter: drop-shadow(0 0 25px rgba(245,200,66,0.7));
 }
 .sunflower-petals {
-  animation: spin-slow 20s linear infinite;
   transform-origin: center;
 }
 .sunflower-love-note {
@@ -531,7 +523,6 @@
   position: absolute;
   top: 2rem; right: 2rem;
   font-size: 3rem;
-  animation: heartbeat 2s ease infinite;
   opacity: 0.7;
 }
 
@@ -572,7 +563,6 @@
   font-size: 2.5rem;
   margin-bottom: 1rem;
   display: block;
-  animation: float 4s ease infinite;
 }
 .worth-title {
   font-family: 'Cinzel', serif;
@@ -910,8 +900,6 @@
   font-family: 'Dancing Script', cursive;
   font-size: 1rem;
   color: var(--gold);
-  animation: float 3s ease infinite;
-  animation-delay: var(--delay);
 }
 
 /* ─── FOOTER ────────────────────────────────────── */
@@ -924,7 +912,6 @@
 .footer-heart {
   font-size: 3rem;
   display: block;
-  animation: heartbeat 1.5s ease infinite;
   margin-bottom: 1rem;
 }
 .footer-text {
@@ -938,20 +925,33 @@
   color: var(--text-muted);
 }
 
-/* ─── FLOATING PETALS ────────────────────────────── */
-.petal {
+/* ─── FLOATING LILIES ───────────────────────────── */
+.lily-container {
   position: fixed;
+  inset: 0;
   pointer-events: none;
-  font-size: 1.5rem;
   z-index: 1;
-  animation: petal-fall linear infinite;
+  overflow: hidden;
+}
+.lily-fall {
+  position: absolute;
+  top: -130px;
+  will-change: transform;
+  animation: lily-drop linear infinite;
+  opacity: 0;
+}
+@keyframes lily-drop {
+  0%   { transform: translateY(0) rotate(0deg);   opacity: 0; }
+  5%   { opacity: 0.8; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
 }
 
-/* ─── SCROLL REVEAL ─────────────────────────────── */
+/* ─── SCROLL REVEAL ─────────────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.8s ease;
+  transform: translateY(24px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
 }
 .reveal.revealed {
   opacity: 1;
@@ -1013,10 +1013,429 @@
   font-size: 2.5rem;
   font-weight: 900;
   color: var(--gold);
-  animation: letter-glow 2s ease infinite;
 }
 .love-meter-label {
   font-family: 'Dancing Script', cursive;
   font-size: 1rem;
   color: var(--pink-soft);
 }
+
+/* ─── SCRATCH SECTION ────────────────────────────── */
+.scratch-section {
+  background: linear-gradient(180deg, #0a0118 0%, #1a0533 50%, #0a0118 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.scratch-wrapper {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(245,200,66,0.15), 0 0 120px rgba(255,107,138,0.08);
+  border: 2px solid rgba(245,200,66,0.25);
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1a0533, #2d0952, #0a0118);
+  min-height: 280px;
+}
+
+.scratch-video-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  gap: 0.8rem;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  background: linear-gradient(135deg, #0a0118 0%, #1a0533 100%);
+}
+.scratch-video-container.video-visible {
+  opacity: 1;
+}
+
+.video-reveal-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  animation: fadeInUp 0.8s ease both;
+}
+.video-reveal-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+  color: var(--gold);
+  text-align: center;
+  animation: letter-glow 2s ease infinite;
+}
+.video-reveal-sub {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1rem;
+  color: var(--pink-soft);
+}
+
+.youtube-embed-wrapper {
+  width: 100%;
+  flex: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  animation: fadeInUp 1s ease 0.3s both;
+}
+.youtube-embed-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 170px;
+  border: none;
+  border-radius: 16px;
+}
+
+.scratch-behind-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255,255,255,0.25);
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.2rem;
+}
+.scratch-lily-bg {
+  font-size: 3.5rem;
+  opacity: 0.15;
+  animation: float 4s ease infinite;
+}
+
+.scratch-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+  border-radius: 28px;
+  z-index: 2;
+}
+
+.scratch-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: rgba(255,255,255,0.08);
+  z-index: 3;
+}
+.scratch-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--rose));
+  transition: width 0.2s ease;
+  border-radius: 0 0 28px 28px;
+}
+
+.scratch-revealed-msg {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: var(--pink-soft);
+  animation: float 4s ease infinite;
+}
+
+/* ─── GALLERY GRID 6 PHOTOS ──────────────────────── */
+.gallery-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+@media (max-width: 900px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 500px) {
+  .gallery-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ─── SCRATCH TEASE BUBBLE ──────────────────────── */
+.scratch-tease-bubble {
+  text-align: center;
+  min-height: 2.5rem;
+  margin-bottom: 0.8rem;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  color: var(--rose);
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.scratch-tease-bubble.tease-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ─── ORDER POPUP ───────────────────────────────── */
+.order-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(10, 1, 24, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: fadeInUp 0.4s ease both;
+}
+.order-popup {
+  background: linear-gradient(145deg, #1a0533 0%, #2d0952 60%, #1a0533 100%);
+  border: 1.5px solid rgba(245,200,66,0.3);
+  border-radius: 28px;
+  padding: 2.5rem 2rem 2rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(245,200,66,0.15), 0 30px 80px rgba(0,0,0,0.6);
+  animation: bounceInPopup 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.order-popup::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--rose), var(--gold));
+  background-size: 200%;
+  animation: shimmer 2.5s linear infinite;
+}
+@keyframes bounceInPopup {
+  0% { opacity: 0; transform: scale(0.6) translateY(40px); }
+  70% { transform: scale(1.04) translateY(-4px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.order-badge {
+  display: inline-block;
+  background: rgba(245,200,66,0.15);
+  border: 1px solid rgba(245,200,66,0.4);
+  color: var(--gold);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.9rem;
+  border-radius: 50px;
+  margin-bottom: 0.6rem;
+  font-family: 'Inter', sans-serif;
+}
+.order-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.order-icon-pulse {
+  animation: heartbeat 1s ease infinite;
+}
+.order-success-pulse {
+  animation: bounceInPopup 0.6s ease both;
+}
+.order-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.order-sub {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--pink-soft);
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+}
+
+/* ── Tracking bar ── */
+.order-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 1rem auto 0.4rem;
+  width: fit-content;
+}
+.order-track-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(245,200,66,0.3);
+}
+.order-track-dot.done {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(245,200,66,0.5);
+}
+.order-track-dot.active {
+  width: 18px; height: 18px;
+  animation: pulse-track 1.2s ease infinite;
+}
+@keyframes pulse-track {
+  0%,100% { box-shadow: 0 0 0 0 rgba(245,200,66,0.7); }
+  50% { box-shadow: 0 0 0 8px rgba(245,200,66,0); }
+}
+.order-track-line {
+  width: 48px; height: 2px;
+  background: linear-gradient(90deg, var(--gold), rgba(245,200,66,0.3));
+}
+.order-track-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 1.2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Receipt ── */
+.order-receipt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1rem 1.2rem;
+  background: rgba(0,0,0,0.25);
+  border: 1px dashed rgba(245,200,66,0.25);
+  border-radius: 12px;
+  margin-bottom: 1.4rem;
+  font-family: 'Inter', monospace;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.75);
+  text-align: left;
+}
+.order-receipt span { display: block; }
+
+/* ── Item card ── */
+.order-item-card {
+  padding: 1.2rem;
+  background: rgba(245,200,66,0.06);
+  border: 1px solid rgba(245,200,66,0.2);
+  border-radius: 16px;
+  margin-bottom: 1.4rem;
+}
+.order-item-hearts {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  margin-bottom: 0.7rem;
+}
+.order-heart-float {
+  font-size: 1.6rem;
+  display: inline-block;
+  animation: float 2s ease-in-out infinite;
+}
+.order-item-name {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+.order-item-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+}
+
+/* ── Final delivered ── */
+.order-delivered-final {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: var(--rose);
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+}
+
+/* ── Confetti ── */
+.order-confetti {
+  position: relative;
+  height: 48px;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  font-size: 1.4rem;
+  animation: confetti-fall 1.5s ease-in-out infinite alternate;
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(28px) rotate(30deg); opacity: 1; }
+}
+
+/* ── Rose Animation ── */
+.order-rose-anim {
+  position: relative;
+  height: 50px;
+  margin-bottom: 0.5rem;
+  overflow: visible;
+}
+.order-rose {
+  position: absolute;
+  font-size: 1.6rem;
+  opacity: 0;
+  bottom: 0;
+  animation: rose-bloom 1.2s ease-out forwards;
+}
+@keyframes rose-bloom {
+  0% { transform: translateY(20px) scale(0) rotate(-20deg); opacity: 0; }
+  60% { transform: translateY(-10px) scale(1.1) rotate(10deg); opacity: 1; }
+  100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ── Buttons ── */
+.order-btns {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+.order-btn-deny {
+  padding: 0.65rem 1.4rem;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 50px;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1rem;
+}
+.order-btn-deny:hover {
+  border-color: var(--rose);
+  color: var(--rose);
+  transform: scale(1.03);
+}
+.order-btn-accept {
+  padding: 0.65rem 1.6rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border: none;
+  border-radius: 50px;
+  color: #1a0533;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 16px rgba(245,200,66,0.35);
+}
+.order-btn-accept:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(245,200,66,0.5);
+}
+@media (max-width: 480px) {
+  .order-popup { padding: 2rem 1.2rem 1.5rem; }
+  .order-btns { flex-direction: column; align-items: center; }
+  .order-btn-deny, .order-btn-accept { width: 100%; }
+}
+
